@@ -1,0 +1,2658 @@
+<!DOCTYPE html>
+<html lang="en" data-active-mode="none">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transformation Workbench &mdash; Blueprint</title>
+<meta name="description" content="Transformation Workbench Blueprint — Making transformation legible enough to reason about.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   DESIGN TOKENS — Pandora Universal Design System
+   ============================================================ */
+:root {
+  --color-bg: #FFFFFF;
+  --color-surface: #F9F5F2;
+  --color-text-primary: #2D2926;
+  --color-text-secondary: #6B5E57;
+  --color-text-tertiary: #4A3F3A;
+  --color-accent: #E8B4BC;
+  --color-accent-dark: #8C545E;
+  --color-accent-medium: #B06B78;
+  --color-accent-soft: #D4B8BD;
+  --color-dark-bg: #2D2926;
+  --color-dark-text: #FFFFFF;
+  --color-dark-subtext: rgba(255,255,255,0.85);
+  --font-heading: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-body: 'Source Sans 3', 'Segoe UI', Calibri, sans-serif;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 100px;
+  --shadow-card: 0 2px 12px rgba(45, 41, 38, 0.06);
+  --shadow-card-hover: 0 4px 20px rgba(232, 180, 188, 0.15);
+  --transition-fast: 200ms ease;
+  --transition-normal: 300ms ease-out;
+  --transition-slow: 500ms ease-out;
+  --max-width: 1200px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 48px;
+  --space-2xl: 80px;
+  --space-3xl: 120px;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--color-text-primary);
+  background: var(--color-bg);
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: clamp(36px, 5vw, 56px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+h2 { font-size: clamp(28px, 3.5vw, 40px); }
+h3 { font-size: clamp(20px, 2vw, 26px); }
+h4 { font-size: 18px; }
+
+p { max-width: 680px; text-wrap: pretty; }
+
+a { color: var(--color-accent-dark); text-decoration: none; }
+a:hover { color: var(--color-accent-medium); }
+
+img { max-width: 100%; display: block; }
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+.overline {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.accent-divider {
+  width: 120px;
+  height: 2px;
+  background: var(--color-accent);
+  border: none;
+  margin: var(--space-lg) 0;
+}
+
+.accent-divider--center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pill {
+  display: inline-block;
+  background: rgba(232, 180, 188, 0.12);
+  border: 1px solid rgba(232, 180, 188, 0.35);
+  border-radius: var(--radius-pill);
+  padding: 5px 16px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.pill--dark {
+  background: rgba(232, 180, 188, 0.18);
+  color: var(--color-dark-text);
+  border-color: rgba(232, 180, 188, 0.3);
+}
+
+.insight-line {
+  font-style: italic;
+  color: var(--color-accent-dark);
+  text-align: center;
+  font-size: 17px;
+  max-width: 720px;
+  margin: var(--space-xl) auto 0;
+  line-height: 1.6;
+}
+
+.section-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+.text-secondary { color: var(--color-text-secondary); }
+.text-tertiary { color: var(--color-text-tertiary); }
+.text-accent { color: var(--color-accent); }
+.text-accent-dark { color: var(--color-accent-dark); }
+
+/* ============================================================
+   SCROLL INDICATOR (left side)
+   ============================================================ */
+.scroll-indicator {
+  position: fixed;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.scroll-indicator__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-accent-soft);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: 0;
+  position: relative;
+}
+
+.scroll-indicator__dot::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  pointer-events: none;
+}
+
+.scroll-indicator__dot:hover::after {
+  opacity: 1;
+}
+
+.scroll-indicator__dot.active {
+  background: var(--color-accent-dark);
+  transform: scale(1.3);
+}
+
+/* ============================================================
+   TOP NAV (lightweight)
+   ============================================================ */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(232, 180, 188, 0.2);
+  padding: 0 var(--space-lg);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: transform var(--transition-normal);
+}
+
+.top-nav.hidden {
+  transform: translateY(-100%);
+}
+
+.top-nav__brand {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: 0.02em;
+}
+
+.top-nav__brand span {
+  color: var(--color-accent-dark);
+}
+
+.top-nav__links {
+  display: flex;
+  gap: var(--space-lg);
+  list-style: none;
+}
+
+.top-nav__link {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  padding: 4px 0;
+  position: relative;
+  transition: color var(--transition-fast);
+}
+
+.top-nav__link:hover,
+.top-nav__link.active {
+  color: var(--color-text-primary);
+}
+
+.top-nav__link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-accent);
+}
+
+/* ============================================================
+   SECTION: HERO / CHALLENGE
+   ============================================================ */
+.narrative-act {
+  position: relative;
+}
+
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3xl) var(--space-lg);
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 800px;
+}
+
+.hero-content .overline {
+  color: var(--color-accent-dark);
+  margin-bottom: var(--space-lg);
+  display: block;
+}
+
+.hero-content h1 {
+  margin-bottom: var(--space-lg);
+}
+
+.hero-content .hero-subtitle {
+  font-size: 20px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  max-width: 620px;
+  margin: 0 auto var(--space-xl);
+}
+
+.hero-scroll-cue {
+  margin-top: var(--space-2xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--color-accent-soft);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: gentleBounce 2.5s ease-in-out infinite;
+}
+
+.hero-scroll-cue svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--color-accent-soft);
+}
+
+@keyframes gentleBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* Challenge cards */
+.challenge-section {
+  padding: var(--space-3xl) var(--space-lg);
+  background: var(--color-surface);
+}
+
+.challenge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
+}
+
+.challenge-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-card);
+  transition: all var(--transition-fast);
+}
+
+.challenge-card:hover {
+  border-color: var(--color-accent-soft);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.challenge-card__number {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: var(--space-sm);
+}
+
+.challenge-card h4 {
+  margin-bottom: var(--space-sm);
+  font-size: 18px;
+}
+
+.challenge-card p {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* ============================================================
+   SECTION: PROMISE (Decision / Dependency / Readiness)
+   ============================================================ */
+.promise-section {
+  padding: var(--space-3xl) var(--space-lg);
+  position: relative;
+}
+
+.promise-header {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.promise-header .overline {
+  color: var(--color-accent-dark);
+  display: block;
+  margin-bottom: var(--space-md);
+}
+
+.promise-header p {
+  margin: var(--space-lg) auto 0;
+  color: var(--color-text-secondary);
+  font-size: 18px;
+  text-align: center;
+  max-width: 600px;
+}
+
+/* Mode switcher */
+.mode-switcher {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xl);
+  background: var(--color-surface);
+  border-radius: var(--radius-pill);
+  padding: 4px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mode-switcher__btn {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 10px 28px;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  background: transparent;
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.mode-switcher__btn:hover {
+  color: var(--color-text-primary);
+}
+
+.mode-switcher__btn.active {
+  background: var(--color-dark-bg);
+  color: var(--color-dark-text);
+}
+
+/* Promise triptych */
+.promise-triptych {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.promise-card {
+  background: var(--color-surface);
+  border: 1px solid rgba(232, 180, 188, 0.3);
+  border-radius: var(--radius-md);
+  padding: var(--space-xl) var(--space-lg);
+  text-align: center;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.promise-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transition: transform var(--transition-normal);
+}
+
+.promise-card:hover::before,
+.promise-card.active::before {
+  transform: scaleX(1);
+}
+
+.promise-card.active {
+  border-color: var(--color-accent);
+  border-width: 2px;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(232, 180, 188, 0.18);
+  background: var(--color-bg);
+}
+
+.promise-card__icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.promise-card__icon svg {
+  width: 40px;
+  height: 40px;
+  stroke: var(--color-accent-dark);
+  stroke-width: 1.5;
+  fill: none;
+  transition: stroke var(--transition-fast);
+}
+
+.promise-card.active .promise-card__icon svg {
+  stroke: var(--color-accent-dark);
+}
+
+.promise-card__number {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: var(--space-sm);
+}
+
+.promise-card h3 {
+  margin-bottom: var(--space-md);
+  transition: color var(--transition-fast);
+}
+
+.promise-card.active h3 {
+  color: var(--color-text-primary);
+}
+
+.promise-card__desc {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  transition: color var(--transition-fast);
+}
+
+.promise-card.active .promise-card__desc {
+  color: var(--color-text-secondary);
+}
+
+.promise-card__items {
+  margin-top: var(--space-lg);
+  text-align: left;
+  list-style: none;
+}
+
+.promise-card__items li {
+  font-size: 14px;
+  padding: 8px 0;
+  border-top: 1px solid rgba(232, 180, 188, 0.15);
+  color: var(--color-text-secondary);
+  transition: color var(--transition-fast);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+.promise-card.active .promise-card__items li {
+  color: var(--color-text-secondary);
+  border-color: rgba(232, 180, 188, 0.2);
+}
+
+.promise-card__items li::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  min-width: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  margin-top: 7px;
+}
+
+/* Promise detail panel */
+.promise-detail {
+  max-width: 1080px;
+  margin: var(--space-xl) auto 0;
+  background: var(--color-surface);
+  border: 1px solid rgba(232, 180, 188, 0.25);
+  border-radius: var(--radius-md);
+  padding: var(--space-xl);
+  display: none;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.promise-detail.visible {
+  display: block;
+}
+
+.promise-detail__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.promise-detail__header h3 {
+  font-size: 24px;
+}
+
+.promise-detail__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-lg);
+}
+
+.promise-detail__item {
+  padding: var(--space-md);
+  border-left: 2px solid var(--color-accent);
+  background: var(--color-bg);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.promise-detail__item h4 {
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  margin-bottom: var(--space-xs);
+}
+
+.promise-detail__item p {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* ============================================================
+   SECTION: ANALYSIS SURFACES
+   ============================================================ */
+.surfaces-section {
+  padding: var(--space-3xl) var(--space-lg);
+  background: var(--color-surface);
+}
+
+.surfaces-header {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.surfaces-header .overline {
+  color: var(--color-accent-dark);
+  display: block;
+  margin-bottom: var(--space-md);
+}
+
+.surfaces-header p {
+  margin: var(--space-lg) auto 0;
+  color: var(--color-text-secondary);
+  font-size: 17px;
+  text-align: center;
+}
+
+.surfaces-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.surface-card {
+  background: var(--color-bg);
+  border: 1px solid rgba(232, 180, 188, 0.3);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.surface-card:hover {
+  border-color: var(--color-accent-soft);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+.surface-card[data-highlight-group].highlighted {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(232, 180, 188, 0.2), var(--shadow-card-hover);
+}
+
+.surface-card__number {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: var(--space-sm);
+}
+
+.surface-card h4 {
+  margin-bottom: var(--space-sm);
+  font-size: 19px;
+}
+
+.surface-card__desc {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--space-md);
+}
+
+.surface-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.surface-card__tag {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent-dark);
+  background: rgba(232, 180, 188, 0.1);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.surface-card__expand {
+  position: absolute;
+  bottom: var(--space-md);
+  right: var(--space-md);
+  font-size: 12px;
+  color: var(--color-accent-dark);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.surface-card:hover .surface-card__expand {
+  opacity: 1;
+}
+
+/* ============================================================
+   SECTION: STRUCTURAL PROOF
+   ============================================================ */
+.proof-section {
+  padding: var(--space-3xl) var(--space-lg);
+}
+
+.proof-header {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.proof-header .overline {
+  color: var(--color-accent-dark);
+  display: block;
+  margin-bottom: var(--space-md);
+}
+
+.proof-header p {
+  margin: var(--space-lg) auto 0;
+  color: var(--color-text-secondary);
+  font-size: 17px;
+  text-align: center;
+}
+
+/* Proof sub-sections */
+.proof-subsection {
+  margin-bottom: var(--space-2xl);
+}
+
+.proof-subsection:last-child {
+  margin-bottom: 0;
+}
+
+.proof-subsection__header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.proof-subsection__number {
+  font-family: var(--font-heading);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--color-accent);
+  line-height: 1;
+}
+
+.proof-subsection__title {
+  font-size: 24px;
+}
+
+.proof-subsection__subtitle {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+/* Object model */
+.object-model {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-md);
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.object-node {
+  background: var(--color-surface);
+  border: 1px solid rgba(232, 180, 188, 0.3);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg) var(--space-md);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 110px;
+}
+
+.object-node:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+.object-node[data-highlight-group].highlighted {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(232, 180, 188, 0.2);
+  background: rgba(232, 180, 188, 0.06);
+}
+
+.object-node__type {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent-dark);
+  margin-bottom: 4px;
+}
+
+.object-node h4 {
+  font-size: 14px;
+  font-family: var(--font-body);
+  font-weight: 600;
+}
+
+.object-node p {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+
+/* Content engine */
+.engine-flow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  max-width: 1080px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.engine-step {
+  flex: 1;
+  text-align: center;
+  padding: var(--space-lg) var(--space-md);
+  background: var(--color-surface);
+  border: 1px solid rgba(232, 180, 188, 0.25);
+  position: relative;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.engine-step:first-child {
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.engine-step:last-child {
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.engine-step:hover {
+  background: rgba(232, 180, 188, 0.06);
+}
+
+.engine-step__number {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: var(--space-xs);
+}
+
+.engine-step h4 {
+  font-size: 13px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.engine-step p {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.engine-chevron {
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  color: var(--color-accent-soft);
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* ============================================================
+   SECTION: JOURNEYS (Layer 5)
+   ============================================================ */
+.journeys-section {
+  padding: var(--space-3xl) var(--space-lg);
+  background: var(--color-surface);
+}
+
+.journeys-header {
+  margin-bottom: var(--space-2xl);
+}
+
+.journeys-header .overline {
+  color: var(--color-accent-dark);
+  display: block;
+  margin-bottom: var(--space-md);
+}
+
+.journeys-header p {
+  margin: var(--space-lg) 0 0;
+  color: var(--color-text-secondary);
+  font-size: 17px;
+  max-width: 680px;
+}
+
+/* Persona tabs */
+.persona-tabs {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-xl);
+  max-width: 1080px;
+}
+
+.persona-tab {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border: 1px solid rgba(232, 180, 188, 0.3);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.persona-tab:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text-primary);
+}
+
+.persona-tab.active {
+  background: var(--color-text-primary);
+  color: var(--color-dark-text);
+  border-color: transparent;
+}
+
+.persona-tab__initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-text-primary);
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.persona-tab.active .persona-tab__initials {
+  background: var(--color-accent-dark);
+  color: var(--color-dark-text);
+}
+
+/* Persona detail panel */
+.persona-detail {
+  max-width: 1080px;
+  background: var(--color-bg);
+  border: 1px solid rgba(232, 180, 188, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--space-xl);
+  animation: fadeInUp 0.35s ease-out;
+}
+
+.persona-detail__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.persona-detail__header-monogram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-text-primary);
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.persona-detail__header h3 {
+  font-size: 24px;
+}
+
+.persona-detail__body {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-xl);
+}
+
+.persona-detail__col h4 {
+  font-size: 11px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent-dark);
+  margin-bottom: var(--space-md);
+}
+
+.persona-detail__start {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-md);
+}
+
+.persona-detail__steps {
+  list-style: none;
+}
+
+.persona-detail__steps li {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  padding: 8px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border-bottom: 1px solid rgba(232, 180, 188, 0.1);
+}
+
+.persona-detail__steps li:last-child {
+  border-bottom: none;
+}
+
+.persona-detail__step-num {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  border-radius: 50%;
+  background: rgba(232, 180, 188, 0.15);
+  color: var(--color-accent-dark);
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.persona-detail__outcome {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.persona-detail__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--space-sm);
+}
+
+.persona-detail__badge-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent-dark);
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-sm);
+  display: block;
+}
+
+.persona-detail__badge-label:first-child {
+  margin-top: 0;
+}
+
+/* ============================================================
+   SECTION: EVOLUTION (Layer 6)
+   ============================================================ */
+.evolution-section {
+  padding: var(--space-3xl) var(--space-lg);
+}
+
+.evolution-header {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.evolution-header .overline {
+  color: var(--color-accent-dark);
+  display: block;
+  margin-bottom: var(--space-md);
+}
+
+.evolution-header p {
+  margin: var(--space-lg) auto 0;
+  color: var(--color-text-secondary);
+  font-size: 17px;
+  text-align: center;
+}
+
+/* Roadmap timeline */
+.roadmap-label {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+.roadmap {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  max-width: 1080px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.roadmap::before {
+  content: '';
+  position: absolute;
+  top: 48px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(to right, var(--color-accent), var(--color-accent-soft));
+}
+
+.roadmap-stage {
+  background: var(--color-bg);
+  border: 1px solid rgba(232, 180, 188, 0.3);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  text-align: center;
+  position: relative;
+  transition: all var(--transition-fast);
+}
+
+.roadmap-stage:first-child {
+  border-color: var(--color-accent);
+  border-width: 2px;
+}
+
+.roadmap-stage__number {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-dark-bg);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-md);
+  position: relative;
+  z-index: 2;
+}
+
+.roadmap-stage:first-child .roadmap-stage__number {
+  background: var(--color-dark-bg);
+  color: var(--color-accent);
+}
+
+.roadmap-stage h4 {
+  font-size: 17px;
+  margin-bottom: var(--space-sm);
+}
+
+.roadmap-stage__desc {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-md);
+  line-height: 1.5;
+}
+
+.roadmap-stage__items {
+  list-style: none;
+  text-align: left;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.roadmap-stage__items li {
+  padding: 3px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.roadmap-stage__items li::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  min-width: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  margin-top: 6px;
+}
+
+/* ============================================================
+   CLOSING SECTION
+   ============================================================ */
+.closing-section {
+  padding: var(--space-3xl) var(--space-lg);
+  background: var(--color-dark-bg);
+  text-align: center;
+  color: var(--color-dark-text);
+}
+
+.closing-section .overline {
+  color: var(--color-accent);
+  display: block;
+  margin-bottom: var(--space-lg);
+}
+
+.closing-section h2 {
+  color: var(--color-dark-text);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.closing-section .accent-divider {
+  margin: var(--space-lg) auto;
+}
+
+.closing-section p {
+  color: var(--color-dark-subtext);
+  margin: 0 auto;
+  font-size: 17px;
+  max-width: 560px;
+}
+
+/* ============================================================
+   SIDE PANEL (progressive disclosure)
+   ============================================================ */
+.side-panel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(45, 41, 38, 0.3);
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
+}
+
+.side-panel-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.side-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 480px;
+  max-width: 90vw;
+  background: var(--color-bg);
+  z-index: 210;
+  transform: translateX(100%);
+  transition: transform var(--transition-normal);
+  overflow-y: auto;
+  box-shadow: -8px 0 40px rgba(45, 41, 38, 0.1);
+}
+
+.side-panel.visible {
+  transform: translateX(0);
+}
+
+.side-panel__header {
+  padding: var(--space-lg);
+  border-bottom: 1px solid rgba(232, 180, 188, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: var(--color-bg);
+  z-index: 2;
+}
+
+.side-panel__close {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(232, 180, 188, 0.3);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  font-size: 18px;
+  transition: all var(--transition-fast);
+}
+
+.side-panel__close:hover {
+  background: var(--color-surface);
+  border-color: var(--color-accent);
+}
+
+.side-panel__overline {
+  color: var(--color-accent-dark);
+}
+
+.side-panel__content {
+  padding: var(--space-lg);
+}
+
+.side-panel__content h3 {
+  font-size: 24px;
+  margin-bottom: var(--space-sm);
+}
+
+.side-panel__content .accent-divider {
+  margin: var(--space-md) 0;
+}
+
+.side-panel__content p {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-md);
+  line-height: 1.6;
+}
+
+.side-panel__content h4 {
+  font-size: 14px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-sm);
+}
+
+.side-panel__section {
+  padding: var(--space-md) 0;
+  border-top: 1px solid rgba(232, 180, 188, 0.15);
+}
+
+.side-panel__badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--space-sm);
+}
+
+.side-panel__sample {
+  background: var(--color-surface);
+  border: 1px solid rgba(232, 180, 188, 0.2);
+  border-radius: var(--radius-sm);
+  padding: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.side-panel__sample-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent-dark);
+  margin-bottom: var(--space-sm);
+}
+
+.side-panel__sample-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(232, 180, 188, 0.1);
+}
+
+.side-panel__sample-row:last-child {
+  border-bottom: none;
+}
+
+.side-panel__sample-row span:first-child {
+  color: var(--color-text-secondary);
+}
+
+.side-panel__sample-row span:last-child {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.side-panel__linked {
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  background: rgba(232, 180, 188, 0.06);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(232, 180, 188, 0.15);
+}
+
+.side-panel__linked h4 {
+  margin-top: 0;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent-dark);
+}
+
+.side-panel__linked-list {
+  list-style: none;
+  font-size: 13px;
+}
+
+.side-panel__linked-list li {
+  padding: 4px 0;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.side-panel__linked-list li::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+/* ============================================================
+   TOOLTIP
+   ============================================================ */
+.tooltip {
+  position: fixed;
+  background: var(--color-dark-bg);
+  color: var(--color-dark-text);
+  font-size: 13px;
+  font-family: var(--font-body);
+  font-weight: 400;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  max-width: 280px;
+  line-height: 1.4;
+  z-index: 300;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms ease;
+  box-shadow: 0 4px 16px rgba(45, 41, 38, 0.2);
+}
+
+.tooltip.visible {
+  opacity: 1;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--color-dark-bg);
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.animate-on-scroll.delay-1 { transition-delay: 100ms; }
+.animate-on-scroll.delay-2 { transition-delay: 200ms; }
+.animate-on-scroll.delay-3 { transition-delay: 300ms; }
+.animate-on-scroll.delay-4 { transition-delay: 400ms; }
+.animate-on-scroll.delay-5 { transition-delay: 500ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-on-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .hero-scroll-cue { animation: none; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .surfaces-grid { grid-template-columns: repeat(2, 1fr); }
+  .object-model { grid-template-columns: repeat(3, 1fr); }
+  .engine-flow { flex-wrap: wrap; }
+  .engine-step { flex: 1 1 45%; }
+  .engine-chevron { display: none; }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --space-3xl: 80px;
+    --space-2xl: 56px;
+  }
+
+  .scroll-indicator { display: none; }
+
+  .top-nav__links { display: none; }
+
+  .promise-triptych { grid-template-columns: 1fr; max-width: 480px; }
+  .surfaces-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+  .engine-flow { flex-direction: column; }
+  .engine-step { flex: none; }
+  .engine-step:first-child { border-radius: var(--radius-md) var(--radius-md) 0 0; }
+  .engine-step:last-child { border-radius: 0 0 var(--radius-md) var(--radius-md); }
+  .roadmap { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+  .roadmap::before { display: none; }
+  .persona-detail__body { grid-template-columns: 1fr; }
+  .object-model { grid-template-columns: repeat(2, 1fr); gap: var(--space-sm); }
+  .object-node { min-height: 90px; }
+
+  .side-panel { width: 100vw; max-width: 100vw; }
+
+  h1 { font-size: 32px; }
+  h2 { font-size: 26px; }
+}
+
+@media (max-width: 480px) {
+  .persona-tabs { flex-direction: column; }
+  .mode-switcher { flex-direction: column; border-radius: var(--radius-md); }
+  .mode-switcher__btn { border-radius: var(--radius-sm); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============================================================
+     TOP NAVIGATION
+     ============================================================ -->
+<nav class="top-nav" id="topNav">
+  <div class="top-nav__brand">Transformation <span>Workbench</span></div>
+  <ul class="top-nav__links">
+    <li><button class="top-nav__link" data-target="challenge">Challenge</button></li>
+    <li><button class="top-nav__link" data-target="promise">Promise</button></li>
+    <li><button class="top-nav__link" data-target="surfaces">Surfaces</button></li>
+    <li><button class="top-nav__link" data-target="proof">Intelligence</button></li>
+    <li><button class="top-nav__link" data-target="journeys">Journeys</button></li>
+    <li><button class="top-nav__link" data-target="evolution">Evolution</button></li>
+  </ul>
+</nav>
+
+<!-- ============================================================
+     SCROLL INDICATOR
+     ============================================================ -->
+<nav class="scroll-indicator" id="scrollIndicator">
+  <button class="scroll-indicator__dot" data-target="hero" data-label="Start" aria-label="Scroll to start"></button>
+  <button class="scroll-indicator__dot" data-target="challenge" data-label="Challenge" aria-label="Scroll to challenge"></button>
+  <button class="scroll-indicator__dot" data-target="promise" data-label="Promise" aria-label="Scroll to promise"></button>
+  <button class="scroll-indicator__dot" data-target="surfaces" data-label="Surfaces" aria-label="Scroll to surfaces"></button>
+  <button class="scroll-indicator__dot" data-target="proof" data-label="Intelligence" aria-label="Scroll to intelligence"></button>
+  <button class="scroll-indicator__dot" data-target="journeys" data-label="Journeys" aria-label="Scroll to journeys"></button>
+  <button class="scroll-indicator__dot" data-target="evolution" data-label="Evolution" aria-label="Scroll to evolution"></button>
+</nav>
+
+<!-- ============================================================
+     SECTION 1: HERO
+     ============================================================ -->
+<section class="narrative-act hero-section" id="hero">
+  <div class="hero-content">
+    <span class="overline">Transformation Workbench Blueprint</span>
+    <h1>How do we make this transformation legible enough to reason about?</h1>
+    <p class="hero-subtitle">
+      Multiple strategic initiatives are converging on the same shared core.
+      Without integrated intelligence, urgency moves faster than&nbsp;visibility.
+    </p>
+    <hr class="accent-divider accent-divider--center">
+    <p class="insight-line" style="margin-top: 0;">
+      This is the first serious artefact in a staged journey toward a transformation workbench.
+    </p>
+    <div class="hero-scroll-cue">
+      <span>Explore</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 2: THE CHALLENGE
+     ============================================================ -->
+<section class="narrative-act challenge-section" id="challenge">
+  <div class="section-inner">
+    <div class="animate-on-scroll">
+      <span class="overline" style="color: var(--color-accent-dark); display: block; margin-bottom: var(--space-md);">Layer 1</span>
+      <h2>The Transformation Challenge</h2>
+      <hr class="accent-divider">
+      <p class="text-secondary" style="font-size: 17px;">
+        The problem is not any single initiative. It is the convergence of many &mdash; each touching shared planning,
+        omnichannel, operational, and technology domains &mdash; without a sufficiently integrated way to see the whole picture.
+      </p>
+    </div>
+
+    <div class="challenge-grid">
+      <div class="challenge-card animate-on-scroll delay-1">
+        <div class="challenge-card__number">01</div>
+        <h4>Too many initiatives</h4>
+        <p>Aurora, Orbit, Hero, Compass, Supercharge &mdash; each with ambition, each with overlap, none with full visibility into the others.</p>
+      </div>
+      <div class="challenge-card animate-on-scroll delay-2">
+        <div class="challenge-card__number">02</div>
+        <h4>Unknown dependencies</h4>
+        <p>Shared domains like Planning &amp; Forecast Logic and Omnichannel Execution are touched by multiple programmes with no unified dependency map.</p>
+      </div>
+      <div class="challenge-card animate-on-scroll delay-3">
+        <div class="challenge-card__number">03</div>
+        <h4>Low technical clarity</h4>
+        <p>System-to-capability mappings remain incomplete. Legacy and future-state boundaries are blurred. Architecture decisions are deferred.</p>
+      </div>
+      <div class="challenge-card animate-on-scroll delay-4">
+        <div class="challenge-card__number">04</div>
+        <h4>Urgency without visibility</h4>
+        <p>Sequencing pressure grows while investigation backlogs remain unresolved. Decisions are made without seeing ripple effects.</p>
+      </div>
+    </div>
+
+    <p class="insight-line animate-on-scroll delay-5">
+      A normal deck or isolated architecture view is not enough. An integrated transformation workbench is needed.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 3: THE PROMISE
+     ============================================================ -->
+<section class="narrative-act promise-section" id="promise">
+  <div class="section-inner">
+    <div class="promise-header animate-on-scroll">
+      <span class="overline">Layer 2 &mdash; The Intelligence Promise</span>
+      <h2>Three lenses to reason through complexity</h2>
+      <hr class="accent-divider accent-divider--center">
+      <p>Everything in this blueprint exists to make these three modes of reasoning&nbsp;possible.</p>
+    </div>
+
+    <div class="mode-switcher animate-on-scroll delay-1" id="modeSwitcher">
+      <button class="mode-switcher__btn" data-mode="decision">Decision</button>
+      <button class="mode-switcher__btn" data-mode="dependency">Dependency</button>
+      <button class="mode-switcher__btn" data-mode="readiness">Readiness</button>
+    </div>
+
+    <div class="promise-triptych animate-on-scroll delay-2" id="promiseTriptych">
+      <!-- Decision -->
+      <div class="promise-card" data-mode="decision" data-highlight-group="decision">
+        <div class="promise-card__icon">
+          <svg viewBox="0 0 40 40"><path d="M20 5L35 15V25L20 35L5 25V15L20 5Z"/><line x1="20" y1="5" x2="20" y2="35"/><line x1="5" y1="15" x2="35" y2="25"/><line x1="35" y1="15" x2="5" y2="25"/></svg>
+        </div>
+        <div class="promise-card__number">01</div>
+        <h3>Decision</h3>
+        <p class="promise-card__desc">What choices matter and what are their implications across the transformation landscape.</p>
+        <ul class="promise-card__items">
+          <li>Compare strategic alternatives</li>
+          <li>Surface hidden trade-offs</li>
+          <li>Identify decision owners</li>
+          <li>Track decision dependencies</li>
+        </ul>
+      </div>
+
+      <!-- Dependency -->
+      <div class="promise-card" data-mode="dependency" data-highlight-group="dependency">
+        <div class="promise-card__icon">
+          <svg viewBox="0 0 40 40"><circle cx="20" cy="8" r="4"/><circle cx="8" cy="32" r="4"/><circle cx="32" cy="32" r="4"/><line x1="20" y1="12" x2="8" y2="28"/><line x1="20" y1="12" x2="32" y2="28"/><line x1="8" y1="32" x2="32" y2="32"/></svg>
+        </div>
+        <div class="promise-card__number">02</div>
+        <h3>Dependency</h3>
+        <p class="promise-card__desc">What those choices affect &mdash; tracing ripple effects across initiatives, capabilities, and systems.</p>
+        <ul class="promise-card__items">
+          <li>Map cross-initiative linkages</li>
+          <li>Trace ripple effects</li>
+          <li>Identify convergence points</li>
+          <li>Reveal hidden couplings</li>
+        </ul>
+      </div>
+
+      <!-- Readiness -->
+      <div class="promise-card" data-mode="readiness" data-highlight-group="readiness">
+        <div class="promise-card__icon">
+          <svg viewBox="0 0 40 40"><rect x="4" y="20" width="8" height="16" rx="1"/><rect x="16" y="12" width="8" height="24" rx="1"/><rect x="28" y="4" width="8" height="32" rx="1"/><line x1="2" y1="38" x2="38" y2="38"/></svg>
+        </div>
+        <div class="promise-card__number">03</div>
+        <h3>Readiness</h3>
+        <p class="promise-card__desc">How prepared the landscape is &mdash; assessing technical, organisational, and operational readiness.</p>
+        <ul class="promise-card__items">
+          <li>Assess architecture clarity</li>
+          <li>Evaluate system preparedness</li>
+          <li>Signal capability gaps</li>
+          <li>Measure dependency maturity</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Promise detail (appears on mode select) -->
+    <div class="promise-detail" id="promiseDetail">
+      <div class="promise-detail__header">
+        <span class="overline" id="promiseDetailOverline" style="color: var(--color-accent-dark);">Active Lens</span>
+      </div>
+      <h3 id="promiseDetailTitle"></h3>
+      <hr class="accent-divider">
+      <p id="promiseDetailDesc" style="font-size: 15px;"></p>
+      <div class="promise-detail__grid" id="promiseDetailGrid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 4: ANALYSIS SURFACES
+     ============================================================ -->
+<section class="narrative-act surfaces-section" id="surfaces">
+  <div class="section-inner">
+    <div class="surfaces-header animate-on-scroll">
+      <span class="overline">Layer 3 &mdash; Working Views</span>
+      <h2>Six reasoning surfaces</h2>
+      <hr class="accent-divider accent-divider--center">
+      <p>How the promise becomes usable. Each surface reveals a different facet of the transformation&nbsp;intelligence.</p>
+    </div>
+
+    <div class="surfaces-grid" id="surfacesGrid">
+      <!-- Cards injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 5: THE INTELLIGENCE UNDERNEATH
+     ============================================================ -->
+<section class="narrative-act proof-section" id="proof">
+  <div class="section-inner">
+    <div class="proof-header animate-on-scroll">
+      <span class="overline">Layer 4 &mdash; The Intelligence Underneath</span>
+      <h2>What powers the workbench</h2>
+      <hr class="accent-divider accent-divider--center">
+      <p>The reasoning surfaces are powered by structured objects and an intelligence pipeline. Objects are what the workbench knows. The pipeline is how it&nbsp;learns.</p>
+    </div>
+
+    <!-- 5A: Objects -->
+    <div class="proof-subsection animate-on-scroll">
+      <div class="proof-subsection__header">
+        <span class="proof-subsection__number">A</span>
+        <div>
+          <h3 class="proof-subsection__title">Objects</h3>
+          <p class="proof-subsection__subtitle">The atomic intelligence units that power every reasoning surface</p>
+        </div>
+      </div>
+      <div class="object-model" id="objectModel">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <!-- 5B: Intelligence Pipeline -->
+    <div class="proof-subsection animate-on-scroll">
+      <div class="proof-subsection__header">
+        <span class="proof-subsection__number">B</span>
+        <div>
+          <h3 class="proof-subsection__title">Intelligence Pipeline</h3>
+          <p class="proof-subsection__subtitle">How raw transformation content becomes structured, validated, and usable</p>
+        </div>
+      </div>
+      <div class="engine-flow" id="engineFlow">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <p class="insight-line animate-on-scroll">
+      Objects are what the workbench knows. The pipeline is how it learns. The surfaces are where users reason.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 6: JOURNEYS (Layer 5)
+     ============================================================ -->
+<section class="narrative-act journeys-section" id="journeys">
+  <div class="section-inner">
+    <div class="journeys-header animate-on-scroll">
+      <span class="overline">Layer 5 &mdash; Who Uses It</span>
+      <h2>Persona-Based Journeys</h2>
+      <hr class="accent-divider">
+      <p>Different roles navigate the workbench through different entry points, but all paths lead through Decision, Dependency, and&nbsp;Readiness.</p>
+    </div>
+
+    <div class="persona-tabs animate-on-scroll" id="personaTabs">
+      <!-- Injected by JS -->
+    </div>
+
+    <div class="animate-on-scroll" id="personaDetail">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 7: EVOLUTION (Layer 6)
+     ============================================================ -->
+<section class="narrative-act evolution-section" id="evolution">
+  <div class="section-inner">
+    <div class="evolution-header animate-on-scroll">
+      <span class="overline">Layer 6 &mdash; Staged Evolution</span>
+      <h2>How the workbench matures</h2>
+      <hr class="accent-divider accent-divider--center">
+      <p>This is stage one of something larger. The workbench evolves in three deliberate&nbsp;phases.</p>
+    </div>
+
+    <div class="roadmap animate-on-scroll" id="roadmap">
+      <!-- Injected by JS -->
+    </div>
+
+    <p class="insight-line animate-on-scroll" style="margin-top: var(--space-2xl);">
+      Stage one makes the transformation legible. Everything after deepens that legibility into operational control.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     CLOSING
+     ============================================================ -->
+<section class="closing-section" id="closing">
+  <div class="section-inner animate-on-scroll">
+    <span class="overline">The Purpose</span>
+    <h2>Making the transformation landscape easier to understand before it becomes harder to&nbsp;execute.</h2>
+    <hr class="accent-divider accent-divider--center">
+    <p>This artefact is designed to make the current transformation landscape easier to understand before it becomes harder to execute &mdash; by bringing decisions, dependencies, and readiness into one connected&nbsp;view.</p>
+    <p style="margin-top: var(--space-lg);">Its purpose is to create clearer visibility into what is changing, what is connected, and what needs to be understood next &mdash; so the transformation can be reasoned about, sequenced, and prepared for with greater&nbsp;confidence.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SIDE PANEL
+     ============================================================ -->
+<div class="side-panel-overlay" id="sidePanelOverlay"></div>
+<aside class="side-panel" id="sidePanel" aria-hidden="true">
+  <div class="side-panel__header">
+    <span class="overline side-panel__overline" id="sidePanelOverline"></span>
+    <button class="side-panel__close" id="sidePanelClose" aria-label="Close panel">&times;</button>
+  </div>
+  <div class="side-panel__content" id="sidePanelContent"></div>
+</aside>
+
+<!-- ============================================================
+     TOOLTIP
+     ============================================================ -->
+<div class="tooltip" id="tooltip"></div>
+
+<!-- ============================================================
+     APPLICATION SCRIPT
+     ============================================================ -->
+<script>
+(function() {
+  'use strict';
+
+  // ============================================================
+  // CONTENT DATA
+  // ============================================================
+  const CONTENT = {
+    surfaces: [
+      {
+        id: 'decision-comparison',
+        number: '01',
+        title: 'Decision Comparison',
+        desc: 'Side-by-side comparison of strategic alternatives across shared dimensions &mdash; capabilities, systems, timelines, and risks.',
+        tags: ['Decision', 'Dependency'],
+        highlightGroup: 'decision',
+        detail: {
+          what: 'Presents open and pending decisions across initiatives in a structured comparison matrix. Each decision is mapped to affected capabilities, dependent systems, and downstream risks.',
+          next: 'Select a decision to see its ripple effects in the Dependency Matrix. Drill into specific capability overlaps. Identify which decisions block sequencing.',
+          objects: ['Decision', 'Initiative', 'Capability', 'Risk / Gap'],
+          drivers: ['architecture clarity', 'shared-domain contention', 'sequencing blockers'],
+          sample: [
+            ['Aurora: Unified Planning Engine', 'High Impact / 3 dependencies'],
+            ['Orbit: Omnichannel Data Layer', 'Critical / Blocks Hero rollout'],
+            ['Compass: Country of Origin Rework', 'Medium / 2 shared domains'],
+            ['Supercharge: Legacy Decom Timing', 'High / Affects 4 initiatives'],
+          ]
+        }
+      },
+      {
+        id: 'dependency-matrix',
+        number: '02',
+        title: 'Dependency Matrix',
+        desc: 'Cross-initiative dependency map showing where initiatives share, compete for, or block the same capabilities and systems.',
+        tags: ['Dependency', 'Readiness'],
+        highlightGroup: 'dependency',
+        detail: {
+          what: 'A matrix of initiatives versus shared domains, revealing where dependencies converge. Cells indicate intensity: shared, competing, or blocking.',
+          next: 'Identify convergence hotspots. Click any cell to see linked decisions and readiness signals. Flag cells for investigation.',
+          objects: ['Initiative', 'Dependency', 'Capability', 'System'],
+          drivers: ['dependency maturity', 'system-to-capability mapping', 'investigation backlog'],
+          sample: [
+            ['Aurora \u00D7 Planning & Forecast', 'Shared / High convergence'],
+            ['Orbit \u00D7 Inventory Transition', 'Competing / Needs resolution'],
+            ['Hero \u00D7 Omnichannel Execution', 'Blocking / Under investigation'],
+            ['Compass \u00D7 Data & Systems Coord.', 'Shared / Low maturity'],
+          ]
+        }
+      },
+      {
+        id: 'shared-domain-stress',
+        number: '03',
+        title: 'Shared Domain Stress',
+        desc: 'Highlights domains under pressure from multiple initiatives &mdash; showing contention, overlap, and unresolved questions.',
+        tags: ['Dependency', 'Readiness'],
+        highlightGroup: 'dependency',
+        detail: {
+          what: 'A domain-centric view that surfaces which shared capabilities are under the most transformation pressure. Shows initiative count, open investigations, and readiness gaps per domain.',
+          next: 'Prioritise investigation queue items for high-stress domains. Compare readiness signals. Recommend sequencing adjustments.',
+          objects: ['Capability', 'System', 'Investigation Item', 'Readiness Signal'],
+          drivers: ['shared-domain contention', 'architecture clarity', 'dependency maturity'],
+          sample: [
+            ['Planning & Forecast Logic', 'Stress: High / 4 initiatives'],
+            ['Omnichannel Execution', 'Stress: Critical / 3 open gaps'],
+            ['Assortment & Hierarchy', 'Stress: Medium / 2 initiatives'],
+            ['Legacy vs Future-State', 'Stress: High / Under review'],
+          ]
+        }
+      },
+      {
+        id: 'readiness-signals',
+        number: '04',
+        title: 'Readiness Signals',
+        desc: 'A structured assessment of technical, organisational, and operational preparedness across the transformation landscape.',
+        tags: ['Readiness'],
+        highlightGroup: 'readiness',
+        detail: {
+          what: 'Aggregates readiness signals across dimensions: architecture clarity, system preparedness, capability mapping maturity, and team alignment. Surfaces gaps and confidence levels.',
+          next: 'Drill into specific signals to see evidence. Link readiness gaps to dependent decisions. Generate investigation items for low-confidence areas.',
+          objects: ['Readiness Signal', 'Capability', 'System', 'Risk / Gap'],
+          drivers: ['architecture clarity', 'system-to-capability mapping', 'dependency maturity'],
+          sample: [
+            ['Architecture Clarity', 'Moderate / 60% mapped'],
+            ['System Preparedness', 'Low / 12 gaps identified'],
+            ['Capability Mapping', 'Partial / Legacy unmapped'],
+            ['Dependency Maturity', 'Emerging / 40% documented'],
+          ]
+        }
+      },
+      {
+        id: 'execution-sequence',
+        number: '05',
+        title: 'Execution Sequence',
+        desc: 'A dependency-aware view of how initiatives and decisions should be sequenced to minimise risk and maximise flow.',
+        tags: ['Decision', 'Dependency', 'Readiness'],
+        highlightGroup: 'decision',
+        detail: {
+          what: 'Builds a sequencing view from dependency data, readiness signals, and decision status. Shows which work streams can proceed in parallel and which are blocked.',
+          next: 'Adjust sequence assumptions. Test alternative orderings. Identify the critical path and its sensitivity to unresolved decisions.',
+          objects: ['Initiative', 'Decision', 'Dependency', 'Scenario'],
+          drivers: ['sequencing blockers', 'shared-domain contention', 'investigation backlog'],
+          sample: [
+            ['Phase 1: Compass + Aurora foundations', 'Ready / No blockers'],
+            ['Phase 2: Orbit data layer', 'Blocked / Awaiting decision D-07'],
+            ['Phase 3: Hero omnichannel rollout', 'At risk / 2 investigations open'],
+            ['Phase 4: Supercharge legacy decom', 'Queued / Depends on Phase 2-3'],
+          ]
+        }
+      },
+      {
+        id: 'investigation-queue',
+        number: '06',
+        title: 'Investigation Queue',
+        desc: 'A prioritised backlog of unresolved technical and architectural questions that must be answered before decisions can be made.',
+        tags: ['Readiness', 'Decision'],
+        highlightGroup: 'readiness',
+        detail: {
+          what: 'Captures and prioritises investigation items &mdash; unresolved questions, architectural unknowns, and capability gaps that block decisions or sequencing.',
+          next: 'Assign owners. Link to affected decisions and domains. Track resolution status. Escalate items that block the critical path.',
+          objects: ['Investigation Item', 'Risk / Gap', 'Decision', 'System'],
+          drivers: ['investigation backlog', 'architecture clarity', 'sequencing blockers'],
+          sample: [
+            ['INV-01: Legacy planning engine APIs', 'Priority: Critical / Blocks Aurora'],
+            ['INV-02: Omnichannel data ownership', 'Priority: High / Affects Orbit + Hero'],
+            ['INV-03: CoO regulatory mapping', 'Priority: Medium / Compass scope'],
+            ['INV-04: Inventory system capacity', 'Priority: High / Cross-initiative'],
+          ]
+        }
+      }
+    ],
+
+    objects: [
+      { name: 'Initiative', type: 'Entity', desc: 'A transformation programme' },
+      { name: 'Decision', type: 'Entity', desc: 'A choice that affects the landscape' },
+      { name: 'Capability', type: 'Domain', desc: 'A business or technical capability' },
+      { name: 'System', type: 'Domain', desc: 'A technology system or platform' },
+      { name: 'Dependency', type: 'Relational', desc: 'A link between two objects' },
+      { name: 'Risk / Gap', type: 'Signal', desc: 'An identified risk or capability gap' },
+      { name: 'Readiness Signal', type: 'Signal', desc: 'A preparedness indicator' },
+      { name: 'Investigation Item', type: 'Action', desc: 'An unresolved question to answer' },
+      { name: 'Scenario', type: 'Reasoning', desc: 'An alternative future state to evaluate' },
+      { name: 'Metric / Outcome', type: 'Future', desc: 'A measurable result or KPI' },
+    ],
+
+    engine: [
+      { number: '01', title: 'Source Intake', desc: 'Gather raw materials from decks, docs, workshops, and interviews' },
+      { number: '02', title: 'Structured Extraction', desc: 'Parse content into discrete intelligence objects' },
+      { number: '03', title: 'Curation & Normalisation', desc: 'Align terminology, resolve duplicates, and cross-reference' },
+      { number: '04', title: 'Validation', desc: 'Review with domain owners and subject-matter experts' },
+      { number: '05', title: 'Publish into the Workbench', desc: 'Make curated intelligence navigable and queryable' },
+      { number: '06', title: 'Evolve into Intelligence', desc: 'From static content to living, connected knowledge' },
+    ],
+
+    journeys: [
+      {
+        role: 'Enterprise Architect',
+        initials: 'EA',
+        startsFrom: 'Dependency Matrix or Shared Domain Stress',
+        steps: [
+          'Review capability-system mappings across initiatives',
+          'Trace cross-initiative dependencies and convergence',
+          'Assess architecture clarity and coexistence complexity',
+          'Identify investigation items for unresolved technical questions',
+          'Validate readiness signals against architecture constraints'
+        ],
+        outcome: 'A clear view of architectural readiness, hidden dependencies, and areas needing deeper investigation before commitments are made.',
+        objects: ['Capability', 'System', 'Dependency', 'Readiness Signal'],
+        surfaces: ['Dependency Matrix', 'Shared Domain Stress', 'Readiness Signals', 'Investigation Queue']
+      },
+      {
+        role: 'Transformation Lead',
+        initials: 'TL',
+        startsFrom: 'Decision Comparison or Execution Sequence',
+        steps: [
+          'Review pending decisions across all initiatives',
+          'Assess dependency-aware sequencing options',
+          'Identify blockers and readiness gaps in the critical path',
+          'Evaluate trade-offs between competing priorities',
+          'Build informed sequencing recommendations'
+        ],
+        outcome: 'Confident, dependency-aware sequencing recommendations with clear visibility into what blocks progress and what enables it.',
+        objects: ['Initiative', 'Decision', 'Dependency', 'Scenario'],
+        surfaces: ['Decision Comparison', 'Execution Sequence', 'Readiness Signals']
+      },
+      {
+        role: 'Domain / Techno-Business Lead',
+        initials: 'DL',
+        startsFrom: 'Shared Domain Stress for their domain',
+        steps: [
+          'Understand which initiatives touch their domain',
+          'Trace dependencies to and from their capability area',
+          'Surface decisions that affect their domain directly',
+          'Assess readiness of their systems and capabilities',
+          'Flag investigation items for unresolved domain questions'
+        ],
+        outcome: 'A clear picture of cross-initiative impact on their domain, enabling proactive coordination rather than reactive discovery.',
+        objects: ['Capability', 'System', 'Initiative', 'Risk / Gap'],
+        surfaces: ['Shared Domain Stress', 'Dependency Matrix', 'Decision Comparison']
+      },
+      {
+        role: 'Executive Sponsor',
+        initials: 'ES',
+        startsFrom: 'Readiness Signals or Execution Sequence',
+        steps: [
+          'Review transformation health at a glance',
+          'Check readiness signals for high-level preparedness',
+          'Understand critical-path dependencies and blockers',
+          'Review sequencing confidence and timeline risks'
+        ],
+        outcome: 'Strategic confidence in the transformation trajectory, with clear escalation signals when attention is needed.',
+        objects: ['Initiative', 'Readiness Signal', 'Decision'],
+        surfaces: ['Readiness Signals', 'Execution Sequence', 'Decision Comparison']
+      }
+    ],
+
+    roadmap: [
+      {
+        number: '1',
+        title: 'Make it legible',
+        desc: 'The current stage. Establish the workbench blueprint and make the transformation possible to reason about.',
+        items: [
+          'Populate the first core intelligence objects',
+          'Activate the first reasoning surfaces',
+          'Operationalise the intelligence pipeline',
+          'Establish the structural foundation'
+        ]
+      },
+      {
+        number: '2',
+        title: 'Deepen the intelligence',
+        desc: 'Enrich the workbench with deeper technical data, automated signals, and broader coverage.',
+        items: [
+          'Deeper graph exploration of dependencies',
+          'Automated readiness scoring',
+          'Scenario reasoning and comparison',
+          'System-to-capability mapping at depth'
+        ]
+      },
+      {
+        number: '3',
+        title: 'Active transformation control',
+        desc: 'Evolve from passive intelligence toward active decision support and operational control.',
+        items: [
+          'Impact tracking and change propagation',
+          'Simulation-informed sequencing',
+          'Conversational query assistance',
+          'Real-time readiness monitoring'
+        ]
+      }
+    ],
+
+    promiseDetails: {
+      decision: {
+        title: 'Understanding Decision',
+        desc: 'The Decision lens makes strategic choices visible, comparable, and traceable. It surfaces what needs to be decided, who owns each decision, what is affected, and what happens if it is deferred.',
+        items: [
+          { title: 'Decision Inventory', desc: 'All open and pending decisions across initiatives, with status, ownership, and urgency.' },
+          { title: 'Impact Mapping', desc: 'Each decision is linked to the capabilities, systems, and domains it touches.' },
+          { title: 'Trade-off Surface', desc: 'Side-by-side comparison of alternatives, showing cost, risk, and dependency implications.' },
+          { title: 'Deferral Analysis', desc: 'What happens when decisions are delayed \u2014 cascading effects on sequencing and readiness.' },
+        ]
+      },
+      dependency: {
+        title: 'Understanding Dependency',
+        desc: 'The Dependency lens reveals where initiatives, capabilities, and systems are coupled. It makes hidden linkages visible and shows where change in one area ripples across the landscape.',
+        items: [
+          { title: 'Cross-Initiative Map', desc: 'Which initiatives share or compete for the same capabilities and systems.' },
+          { title: 'Ripple Effect Trace', desc: 'Select any object and see what it connects to \u2014 up, down, and across the graph.' },
+          { title: 'Convergence Hotspots', desc: 'Domains where three or more initiatives overlap, creating coordination risk.' },
+          { title: 'Coupling Intensity', desc: 'A measure of how tightly coupled two areas are, informing decoupling strategies.' },
+        ]
+      },
+      readiness: {
+        title: 'Understanding Readiness',
+        desc: 'The Readiness lens assesses how prepared the enterprise is to execute. It aggregates signals across technical, organisational, and operational dimensions to surface gaps before they become blockers.',
+        items: [
+          { title: 'Architecture Clarity', desc: 'How well-defined the target architecture is for each domain and initiative.' },
+          { title: 'System Preparedness', desc: 'Whether current systems can support planned changes, or require intervention.' },
+          { title: 'Capability Gaps', desc: 'Where required capabilities are missing, immature, or unmapped.' },
+          { title: 'Investigation Status', desc: 'How many unknowns remain unresolved and their impact on decision confidence.' },
+        ]
+      }
+    }
+  };
+
+  // ============================================================
+  // RENDER FUNCTIONS
+  // ============================================================
+
+  function renderSurfaces() {
+    const grid = document.getElementById('surfacesGrid');
+    grid.innerHTML = CONTENT.surfaces.map((s, i) => `
+      <div class="surface-card animate-on-scroll delay-${i % 3 + 1}" data-surface-id="${s.id}" data-highlight-group="${s.highlightGroup}">
+        <div class="surface-card__number">${s.number}</div>
+        <h4>${s.title}</h4>
+        <p class="surface-card__desc">${s.desc}</p>
+        <div class="surface-card__meta">
+          ${s.tags.map(t => `<span class="surface-card__tag">${t}</span>`).join('')}
+        </div>
+        <span class="surface-card__expand">Explore &rarr;</span>
+      </div>
+    `).join('');
+  }
+
+  function renderObjectModel() {
+    const container = document.getElementById('objectModel');
+    container.innerHTML = CONTENT.objects.map(o => {
+      const group = o.name.toLowerCase().includes('decision') ? 'decision' :
+                    o.name.toLowerCase().includes('dependency') ? 'dependency' :
+                    o.name.toLowerCase().includes('readiness') ? 'readiness' : '';
+      return `<div class="object-node" ${group ? `data-highlight-group="${group}"` : ''} data-tooltip="${o.type}: ${o.desc}">
+        <div class="object-node__type">${o.type}</div>
+        <h4>${o.name}</h4>
+        <p>${o.desc}</p>
+      </div>`;
+    }).join('');
+  }
+
+  function renderEngine() {
+    const container = document.getElementById('engineFlow');
+    container.innerHTML = CONTENT.engine.map((step, i) => {
+      const chevron = i < CONTENT.engine.length - 1 ? '<span class="engine-chevron">\u203A</span>' : '';
+      return `<div class="engine-step">
+        <div class="engine-step__number">${step.number}</div>
+        <h4>${step.title}</h4>
+        <p>${step.desc}</p>
+        ${chevron}
+      </div>`;
+    }).join('');
+  }
+
+  function renderJourneys() {
+    const tabsContainer = document.getElementById('personaTabs');
+    const detailContainer = document.getElementById('personaDetail');
+
+    // Render tabs
+    tabsContainer.innerHTML = CONTENT.journeys.map((j, i) => `
+      <button class="persona-tab${i === 0 ? ' active' : ''}" data-journey-idx="${i}">
+        <span class="persona-tab__initials">${j.initials}</span>
+        ${j.role}
+      </button>
+    `).join('');
+
+    function showJourney(idx) {
+      const j = CONTENT.journeys[idx];
+
+      // Update active tab
+      tabsContainer.querySelectorAll('.persona-tab').forEach((tab, i) => {
+        tab.classList.toggle('active', i === idx);
+      });
+
+      detailContainer.innerHTML = `
+        <div class="persona-detail">
+          <div class="persona-detail__header">
+            <span class="persona-detail__header-monogram">${j.initials}</span>
+            <h3>${j.role}</h3>
+          </div>
+          <div class="persona-detail__body">
+            <div class="persona-detail__col">
+              <h4>Starts From</h4>
+              <p class="persona-detail__start">${j.startsFrom}</p>
+              <ol class="persona-detail__steps">
+                ${j.steps.map((s, i) => `<li><span class="persona-detail__step-num">${i + 1}</span> ${s}</li>`).join('')}
+              </ol>
+            </div>
+            <div class="persona-detail__col">
+              <h4>Outcome</h4>
+              <p class="persona-detail__outcome">${j.outcome}</p>
+            </div>
+            <div class="persona-detail__col">
+              <span class="persona-detail__badge-label">Key Objects</span>
+              <div class="persona-detail__badges">
+                ${j.objects.map(o => `<span class="pill">${o}</span>`).join('')}
+              </div>
+              <span class="persona-detail__badge-label">Surfaces</span>
+              <div class="persona-detail__badges">
+                ${j.surfaces.map(s => `<span class="pill">${s}</span>`).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Initial render
+    showJourney(0);
+
+    // Tab clicks
+    tabsContainer.addEventListener('click', e => {
+      const tab = e.target.closest('.persona-tab');
+      if (tab) {
+        showJourney(parseInt(tab.dataset.journeyIdx));
+      }
+    });
+  }
+
+  function renderRoadmap() {
+    const container = document.getElementById('roadmap');
+    container.innerHTML = CONTENT.roadmap.map(stage => `
+      <div class="roadmap-stage">
+        <div class="roadmap-stage__number">${stage.number}</div>
+        <h4>${stage.title}</h4>
+        <p class="roadmap-stage__desc">${stage.desc}</p>
+        <ul class="roadmap-stage__items">
+          ${stage.items.map(item => `<li>${item}</li>`).join('')}
+        </ul>
+      </div>
+    `).join('');
+  }
+
+  // ============================================================
+  // SIDE PANEL
+  // ============================================================
+
+  const sidePanel = document.getElementById('sidePanel');
+  const sidePanelOverlay = document.getElementById('sidePanelOverlay');
+  const sidePanelContent = document.getElementById('sidePanelContent');
+  const sidePanelOverline = document.getElementById('sidePanelOverline');
+  const sidePanelClose = document.getElementById('sidePanelClose');
+
+  function openPanel(surface) {
+    const d = surface.detail;
+    sidePanelOverline.textContent = `Analysis Surface ${surface.number}`;
+
+    let sampleHtml = '';
+    if (d.sample && d.sample.length > 0) {
+      sampleHtml = `
+        <div class="side-panel__sample">
+          <div class="side-panel__sample-label">Illustrative Data</div>
+          ${d.sample.map(row => `
+            <div class="side-panel__sample-row">
+              <span>${row[0]}</span>
+              <span>${row[1]}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    sidePanelContent.innerHTML = `
+      <h3>${surface.title}</h3>
+      <hr class="accent-divider">
+      <div class="side-panel__section">
+        <h4>What it reveals</h4>
+        <p>${d.what}</p>
+      </div>
+      <div class="side-panel__section">
+        <h4>What the user does next</h4>
+        <p>${d.next}</p>
+      </div>
+      ${sampleHtml}
+      <div class="side-panel__linked">
+        <h4>Depends on these objects</h4>
+        <ul class="side-panel__linked-list">
+          ${d.objects.map(o => `<li>${o}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="side-panel__linked" style="margin-top: var(--space-md);">
+        <h4>Shaped by these drivers</h4>
+        <ul class="side-panel__linked-list">
+          ${d.drivers.map(dr => `<li>${dr}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+
+    sidePanel.classList.add('visible');
+    sidePanel.setAttribute('aria-hidden', 'false');
+    sidePanelOverlay.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+
+    // Focus trap
+    const focusable = sidePanel.querySelectorAll('button, [tabindex]');
+    if (focusable.length) focusable[0].focus();
+  }
+
+  function closePanel() {
+    sidePanel.classList.remove('visible');
+    sidePanel.setAttribute('aria-hidden', 'true');
+    sidePanelOverlay.classList.remove('visible');
+    document.body.style.overflow = '';
+  }
+
+  sidePanelClose.addEventListener('click', closePanel);
+  sidePanelOverlay.addEventListener('click', closePanel);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && sidePanel.classList.contains('visible')) closePanel();
+  });
+
+  // ============================================================
+  // MODE SWITCHING
+  // ============================================================
+
+  const promiseCards = () => document.querySelectorAll('.promise-card');
+  const modeBtns = document.querySelectorAll('.mode-switcher__btn');
+  const promiseDetail = document.getElementById('promiseDetail');
+  const promiseDetailTitle = document.getElementById('promiseDetailTitle');
+  const promiseDetailDesc = document.getElementById('promiseDetailDesc');
+  const promiseDetailGrid = document.getElementById('promiseDetailGrid');
+  const promiseDetailOverline = document.getElementById('promiseDetailOverline');
+
+  function setMode(mode) {
+    // Update HTML attribute
+    document.documentElement.setAttribute('data-active-mode', mode);
+
+    // Update buttons
+    modeBtns.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.mode === mode);
+    });
+
+    // Update cards
+    promiseCards().forEach(card => {
+      card.classList.toggle('active', card.dataset.mode === mode);
+    });
+
+    // Show detail
+    if (mode && CONTENT.promiseDetails[mode]) {
+      const detail = CONTENT.promiseDetails[mode];
+      promiseDetailOverline.textContent = mode.charAt(0).toUpperCase() + mode.slice(1) + ' Lens';
+      promiseDetailTitle.textContent = detail.title;
+      promiseDetailDesc.textContent = detail.desc;
+      promiseDetailGrid.innerHTML = detail.items.map(item => `
+        <div class="promise-detail__item">
+          <h4>${item.title}</h4>
+          <p>${item.desc}</p>
+        </div>
+      `).join('');
+      promiseDetail.classList.add('visible');
+    } else {
+      promiseDetail.classList.remove('visible');
+    }
+
+    // Highlight connected elements
+    highlightGroup(mode);
+  }
+
+  modeBtns.forEach(btn => {
+    btn.addEventListener('click', () => setMode(btn.dataset.mode));
+  });
+
+  // ============================================================
+  // CONNECTED HIGHLIGHTING
+  // ============================================================
+
+  function highlightGroup(group) {
+    // Remove all highlights
+    document.querySelectorAll('[data-highlight-group].highlighted').forEach(el => {
+      el.classList.remove('highlighted');
+    });
+
+    if (!group) return;
+
+    // Add highlights
+    document.querySelectorAll(`[data-highlight-group="${group}"]`).forEach(el => {
+      el.classList.add('highlighted');
+    });
+  }
+
+  // ============================================================
+  // SURFACE CARD CLICKS
+  // ============================================================
+
+  document.addEventListener('click', e => {
+    const card = e.target.closest('.surface-card');
+    if (card) {
+      const id = card.dataset.surfaceId;
+      const surface = CONTENT.surfaces.find(s => s.id === id);
+      if (surface) openPanel(surface);
+    }
+  });
+
+  // Promise card clicks
+  document.addEventListener('click', e => {
+    const card = e.target.closest('.promise-card');
+    if (card) {
+      const mode = card.dataset.mode;
+      setMode(mode);
+    }
+  });
+
+  // ============================================================
+  // TOOLTIP SYSTEM
+  // ============================================================
+
+  const tooltip = document.getElementById('tooltip');
+  let tooltipTimeout;
+
+  document.addEventListener('mouseover', e => {
+    const target = e.target.closest('[data-tooltip]');
+    if (!target) return;
+
+    clearTimeout(tooltipTimeout);
+    tooltipTimeout = setTimeout(() => {
+      const text = target.dataset.tooltip;
+      const rect = target.getBoundingClientRect();
+
+      tooltip.textContent = text;
+      tooltip.classList.add('visible');
+
+      const tipRect = tooltip.getBoundingClientRect();
+      let left = rect.left + rect.width / 2 - tipRect.width / 2;
+      let top = rect.top - tipRect.height - 10;
+
+      // Keep in viewport
+      if (left < 8) left = 8;
+      if (left + tipRect.width > window.innerWidth - 8) left = window.innerWidth - tipRect.width - 8;
+      if (top < 8) top = rect.bottom + 10;
+
+      tooltip.style.left = left + 'px';
+      tooltip.style.top = top + 'px';
+    }, 200);
+  });
+
+  document.addEventListener('mouseout', e => {
+    const target = e.target.closest('[data-tooltip]');
+    if (!target) return;
+    clearTimeout(tooltipTimeout);
+    tooltip.classList.remove('visible');
+  });
+
+  // ============================================================
+  // SCROLL ANIMATIONS (IntersectionObserver)
+  // ============================================================
+
+  const scrollObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  function initScrollAnimations() {
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+      scrollObserver.observe(el);
+    });
+  }
+
+  // ============================================================
+  // SCROLL INDICATOR & NAV
+  // ============================================================
+
+  const sections = ['hero', 'challenge', 'promise', 'surfaces', 'proof', 'journeys', 'evolution'];
+  const scrollDots = document.querySelectorAll('.scroll-indicator__dot');
+  const navLinks = document.querySelectorAll('.top-nav__link');
+  const topNav = document.getElementById('topNav');
+  let lastScrollY = 0;
+
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+
+        // Update dots
+        scrollDots.forEach(dot => {
+          dot.classList.toggle('active', dot.dataset.target === id);
+        });
+
+        // Update nav links
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.dataset.target === id);
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) sectionObserver.observe(el);
+  });
+
+  // Click to scroll
+  scrollDots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const target = document.getElementById(dot.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      const target = document.getElementById(link.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // Hide/show top nav on scroll
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    if (scrollY > 200 && scrollY > lastScrollY) {
+      topNav.classList.add('hidden');
+    } else {
+      topNav.classList.remove('hidden');
+    }
+    lastScrollY = scrollY;
+  }, { passive: true });
+
+  // ============================================================
+  // HOVER HIGHLIGHTING ON CARDS
+  // ============================================================
+
+  document.addEventListener('mouseenter', e => {
+    const el = e.target.closest('[data-highlight-group]');
+    if (el && !document.querySelector('.promise-card.active')) {
+      // For surface cards, only highlight the individual card (not the whole group)
+      if (el.classList.contains('surface-card')) {
+        document.querySelectorAll('[data-highlight-group].highlighted').forEach(h => h.classList.remove('highlighted'));
+        el.classList.add('highlighted');
+      } else {
+        highlightGroup(el.dataset.highlightGroup);
+      }
+    }
+  }, true);
+
+  document.addEventListener('mouseleave', e => {
+    const el = e.target.closest('[data-highlight-group]');
+    if (el && !document.querySelector('.promise-card.active')) {
+      if (el.classList.contains('surface-card')) {
+        el.classList.remove('highlighted');
+      } else {
+        highlightGroup(null);
+      }
+    }
+  }, true);
+
+  // ============================================================
+  // INIT
+  // ============================================================
+
+  function init() {
+    renderSurfaces();
+    renderObjectModel();
+    renderEngine();
+    renderJourneys();
+    renderRoadmap();
+    initScrollAnimations();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+})();
+</script>
+
+</body>
+</html>
