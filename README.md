@@ -12,7 +12,7 @@ This is a single-page interactive artefact designed to create clearer visibility
 
 ## Structure
 
-The workbench is organised into six narrative layers:
+The workbench is organised into seven narrative layers:
 
 | Layer | Name | Purpose |
 |-------|------|---------|
@@ -20,8 +20,9 @@ The workbench is organised into six narrative layers:
 | 2 | **The Promise** | Introduces three reasoning lenses: Decision, Dependency, and Readiness |
 | 3 | **Reasoning Surfaces** | Six working views that make the promise usable — from dependency matrices to readiness dashboards |
 | 4 | **The Intelligence Underneath** | The structured objects and intelligence pipeline that power every surface |
-| 5 | **Persona Journeys** | How different roles (Enterprise Architect, Transformation Lead, etc.) navigate the workbench |
-| 6 | **Staged Evolution** | A three-stage roadmap from legibility to foresight |
+| 5 | **Illustrative Walkthrough** | Shows how Aurora moves through the draft-first, workshop-based process to become structured intelligence |
+| 6 | **Persona Journeys** | How different roles (Enterprise Architect, Transformation Lead, etc.) navigate the workbench |
+| 7 | **Staged Evolution** | A three-stage roadmap from legibility to foresight |
 
 ## Design System
 
