@@ -933,6 +933,7 @@ img { max-width: 100%; display: block; }
 }
 
 .journeys-header {
+  text-align: center;
   margin-bottom: var(--space-2xl);
 }
 
@@ -943,10 +944,11 @@ img { max-width: 100%; display: block; }
 }
 
 .journeys-header p {
-  margin: var(--space-lg) 0 0;
+  margin: var(--space-lg) auto 0;
   color: var(--color-text-secondary);
   font-size: 17px;
   max-width: 680px;
+  text-align: center;
 }
 
 /* Persona tabs */
@@ -1226,6 +1228,75 @@ img { max-width: 100%; display: block; }
   height: 1px;
   background: rgba(232, 180, 188, 0.35);
   flex-shrink: 0;
+}
+
+/* Initiative sequence strip */
+.initiative-sequence {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  max-width: 880px;
+  margin: 0 auto var(--space-2xl);
+  padding: var(--space-lg) var(--space-xl);
+  background: var(--color-bg);
+  border: 1px solid rgba(232, 180, 188, 0.2);
+  border-radius: var(--radius-md);
+}
+
+.initiative-sequence__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.initiative-sequence__item--active {
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.initiative-sequence__item--final {
+  font-weight: 600;
+  color: var(--color-accent-dark);
+}
+
+.initiative-sequence__dot {
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  border-radius: 50%;
+  background: rgba(232, 180, 188, 0.4);
+}
+
+.initiative-sequence__item--active .initiative-sequence__dot {
+  background: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(232, 180, 188, 0.25);
+}
+
+.initiative-sequence__dot--final {
+  width: 10px;
+  height: 10px;
+  min-width: 10px;
+  background: var(--color-accent-dark) !important;
+  box-shadow: 0 0 0 3px rgba(140, 84, 94, 0.15) !important;
+}
+
+.initiative-sequence__line {
+  width: 24px;
+  height: 1px;
+  background: rgba(232, 180, 188, 0.35);
+  flex-shrink: 0;
+  margin: 0 6px;
+}
+
+.initiative-sequence__line--dashed {
+  background: none;
+  border-top: 1px dashed rgba(232, 180, 188, 0.5);
+  height: 0;
 }
 
 /* Walkthrough phase panels */
@@ -2017,6 +2088,9 @@ img { max-width: 100%; display: block; }
   .object-model { grid-template-columns: repeat(2, 1fr); gap: var(--space-sm); }
   .object-node { min-height: 90px; }
 
+  .initiative-sequence { flex-wrap: wrap; gap: var(--space-xs); padding: var(--space-md); }
+  .initiative-sequence__line { width: 12px; margin: 0 2px; }
+  .initiative-sequence__item { font-size: 11px; }
   .walkthrough-stepper { flex-wrap: wrap; gap: var(--space-xs); }
   .walkthrough-stepper__connector { width: 24px; }
   .walkthrough-stepper__step { padding: 10px 14px; font-size: 12px; }
@@ -2098,13 +2172,13 @@ img { max-width: 100%; display: block; }
      ============================================================ -->
 <section class="narrative-act challenge-section" id="challenge">
   <div class="section-inner">
-    <div class="animate-on-scroll">
+    <div class="animate-on-scroll" style="text-align: center;">
       <span class="overline" style="color: var(--color-accent-dark); display: block; margin-bottom: var(--space-md);">Layer 1</span>
       <h2>The Transformation Challenge</h2>
-      <hr class="accent-divider">
-      <p class="text-secondary" style="font-size: 17px;">
+      <hr class="accent-divider accent-divider--center">
+      <p class="text-secondary" style="font-size: 17px; margin-left: auto; margin-right: auto;">
         The problem is not any single initiative. It is the convergence of many &mdash; each touching shared planning,
-        omnichannel, operational, and technology domains &mdash; without a sufficiently integrated way to see the whole picture.
+        omnichannel, operational, and technology domains &mdash; without a sufficiently integrated way to see the whole&nbsp;picture.
       </p>
     </div>
 
@@ -2289,9 +2363,9 @@ img { max-width: 100%; display: block; }
   <div class="section-inner">
     <div class="discovery-header animate-on-scroll">
       <span class="overline">Layer 5 &mdash; Illustrative Walkthrough</span>
-      <h2>How one initiative becomes structured&nbsp;intelligence</h2>
+      <h2>One initiative at a time, until the whole landscape is&nbsp;legible</h2>
       <hr class="accent-divider accent-divider--center">
-      <p>A draft-first, initiative-centric process that turns workshop input into confirmed dependencies, readiness signals, and investigation&nbsp;items.</p>
+      <p>Each initiative goes through the same structured process &mdash; draft, workshop, reconcile. Aurora first, then Orbit, Hero, Compass, and onward. After every initiative is processed, the outputs are reconciled into one integrated transformation&nbsp;model.</p>
     </div>
 
     <!-- Phase stepper -->
@@ -2310,6 +2384,33 @@ img { max-width: 100%; display: block; }
         <span class="walkthrough-stepper__num">3</span>
         Reconcile outputs
       </button>
+    </div>
+
+    <!-- Initiative sequence strip -->
+    <div class="initiative-sequence animate-on-scroll">
+      <div class="initiative-sequence__item initiative-sequence__item--active">
+        <span class="initiative-sequence__dot"></span>Aurora
+      </div>
+      <div class="initiative-sequence__line"></div>
+      <div class="initiative-sequence__item">
+        <span class="initiative-sequence__dot"></span>Orbit
+      </div>
+      <div class="initiative-sequence__line"></div>
+      <div class="initiative-sequence__item">
+        <span class="initiative-sequence__dot"></span>Hero
+      </div>
+      <div class="initiative-sequence__line"></div>
+      <div class="initiative-sequence__item">
+        <span class="initiative-sequence__dot"></span>Compass
+      </div>
+      <div class="initiative-sequence__line"></div>
+      <div class="initiative-sequence__item">
+        <span class="initiative-sequence__dot"></span>MCOO
+      </div>
+      <div class="initiative-sequence__line initiative-sequence__line--dashed"></div>
+      <div class="initiative-sequence__item initiative-sequence__item--final">
+        <span class="initiative-sequence__dot initiative-sequence__dot--final"></span>Integrated Model
+      </div>
     </div>
 
     <!-- ====== PHASE 1: Version 0 Draft ====== -->
@@ -2472,7 +2573,7 @@ img { max-width: 100%; display: block; }
       <!-- ====== PHASE 3: Reconcile Outputs ====== -->
       <div class="walkthrough-phase" data-phase="2">
         <div class="outputs-panel">
-          <p class="outputs-panel__intro">After the Aurora workshop, individual outputs are reconciled against the broader landscape &mdash; aligning with other initiative workshops to build one connected transformation&nbsp;model.</p>
+          <p class="outputs-panel__intro">This is what one initiative workshop produces. The same process runs for Orbit, Hero, Compass, MCOO, and every other initiative in scope. After all workshops complete, the individual outputs are reconciled into one integrated transformation&nbsp;model.</p>
 
           <div class="outputs-grid">
             <div class="output-card">
@@ -2524,7 +2625,7 @@ img { max-width: 100%; display: block; }
     </div>
 
     <p class="insight-line animate-on-scroll" style="margin-top: var(--space-2xl);">
-      This is how the workbench gets built &mdash; not from abstraction, but from structured extraction, collaborative correction, and progressive&nbsp;reconciliation.
+      Initiative by initiative, the workbench takes shape &mdash; each workshop sharpens the draft, and reconciliation across all initiatives produces the integrated transformation model that powers every reasoning&nbsp;surface.
     </p>
   </div>
 </section>
@@ -2537,7 +2638,7 @@ img { max-width: 100%; display: block; }
     <div class="journeys-header animate-on-scroll">
       <span class="overline">Layer 6 &mdash; Who Uses It</span>
       <h2>Persona-Based Journeys</h2>
-      <hr class="accent-divider">
+      <hr class="accent-divider accent-divider--center">
       <p>Different roles navigate the workbench through different entry points, but all paths lead through Decision, Dependency, and&nbsp;Readiness.</p>
     </div>
 
