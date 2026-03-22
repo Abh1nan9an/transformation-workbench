@@ -1934,40 +1934,7 @@ img { max-width: 100%; display: block; }
   color: var(--color-accent);
 }
 
-/* Produces section in prompts column */
-.side-panel__produces {
-  margin-top: var(--space-lg);
-  padding: var(--space-md);
-  background: rgba(232, 180, 188, 0.06);
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(232, 180, 188, 0.15);
-}
-
-.side-panel__produces h4 {
-  margin-top: 0;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-accent-dark);
-}
-
-.side-panel__produces-list {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.side-panel__produces-list li {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--color-accent-dark);
-  background: rgba(232, 180, 188, 0.12);
-  border: 1px solid rgba(232, 180, 188, 0.2);
-  border-radius: var(--radius-pill);
-  padding: 3px 10px;
-}
+/* Produces section in prompts column — uses same style as linked blocks */
 
 /* Object panel fields */
 .side-panel__fields {
@@ -2093,8 +2060,9 @@ img { max-width: 100%; display: block; }
 
 .side-panel__sample-row {
   display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 0;
   font-size: 13px;
   border-bottom: 1px solid rgba(232, 180, 188, 0.1);
 }
@@ -2104,12 +2072,13 @@ img { max-width: 100%; display: block; }
 }
 
 .side-panel__sample-row span:first-child {
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
+  font-weight: 600;
 }
 
 .side-panel__sample-row span:last-child {
-  font-weight: 600;
-  color: var(--color-text-primary);
+  font-size: 12px;
+  color: var(--color-text-secondary);
 }
 
 .side-panel__linked {
@@ -3455,9 +3424,9 @@ img { max-width: 100%; display: block; }
         <ul class="side-panel__prompt-list">
           ${d.prompts.map(q => `<li>${q}</li>`).join('')}
         </ul>
-        <div class="side-panel__produces">
+        <div class="side-panel__linked">
           <h4>What these questions help produce</h4>
-          <ul class="side-panel__produces-list">
+          <ul class="side-panel__linked-list">
             ${d.produces.map(p => `<li>${p}</li>`).join('')}
           </ul>
         </div>
@@ -3466,7 +3435,7 @@ img { max-width: 100%; display: block; }
 
     sidePanelContent.innerHTML = `
       <h3>${surface.title}</h3>
-      <hr class="accent-divider">
+      <hr class="accent-divider" style="margin-bottom: var(--space-xl);">
       <div class="side-panel__columns">
         <div>
           <span class="side-panel__col-label">Surface explanation</span>
