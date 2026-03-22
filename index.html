@@ -1877,8 +1877,124 @@ img { max-width: 100%; display: block; }
   box-shadow: -8px 0 40px rgba(45, 41, 38, 0.1);
 }
 
+.side-panel--wide {
+  width: 780px;
+}
+
 .side-panel.visible {
   transform: translateX(0);
+}
+
+/* Two-column panel layout */
+.side-panel__columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+}
+
+.side-panel__col-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent-dark);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid var(--color-accent);
+  display: block;
+}
+
+/* Workshop prompts column */
+.side-panel__prompt-list {
+  list-style: none;
+  padding: 0;
+}
+
+.side-panel__prompt-list li {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  padding: 8px 0 8px 18px;
+  position: relative;
+  border-bottom: 1px solid rgba(232, 180, 188, 0.08);
+}
+
+.side-panel__prompt-list li:last-child {
+  border-bottom: none;
+}
+
+.side-panel__prompt-list li::before {
+  content: '?';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-accent);
+}
+
+/* Produces section in prompts column */
+.side-panel__produces {
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  background: rgba(232, 180, 188, 0.06);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(232, 180, 188, 0.15);
+}
+
+.side-panel__produces h4 {
+  margin-top: 0;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent-dark);
+}
+
+.side-panel__produces-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.side-panel__produces-list li {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-accent-dark);
+  background: rgba(232, 180, 188, 0.12);
+  border: 1px solid rgba(232, 180, 188, 0.2);
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+}
+
+/* Object panel fields */
+.side-panel__fields {
+  margin-top: var(--space-md);
+}
+
+.side-panel__field-group {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  padding: 6px 0 6px 16px;
+  position: relative;
+  border-bottom: 1px solid rgba(232, 180, 188, 0.08);
+}
+
+.side-panel__field-group:last-child {
+  border-bottom: none;
+}
+
+.side-panel__field-group::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 13px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
 }
 
 .side-panel__header {
@@ -2150,6 +2266,8 @@ img { max-width: 100%; display: block; }
   .workshop-pass__body { padding-left: var(--space-xl); }
   .outputs-grid { grid-template-columns: 1fr; max-width: 320px; margin: 0 auto var(--space-xl); }
   .side-panel { width: 100vw; max-width: 100vw; }
+  .side-panel--wide { width: 100vw; }
+  .side-panel__columns { grid-template-columns: 1fr; }
 
   h1 { font-size: 32px; }
   h2 { font-size: 26px; }
@@ -2788,7 +2906,15 @@ img { max-width: 100%; display: block; }
             ['Orbit: Omnichannel Data Layer', 'Critical / Blocks Hero rollout'],
             ['Compass: Country of Origin Rework', 'Medium / 2 shared domains'],
             ['Supercharge: Legacy Decom Timing', 'High / Affects 4 initiatives'],
-          ]
+          ],
+          prompts: [
+            'Which transformation choices are already explicit, and which are still being made implicitly?',
+            'Which decisions create the biggest downstream consequences across planning, hierarchy, rollout, or coexistence logic?',
+            'Which decisions are reversible later, and which ones lock architecture or data structures early?',
+            'What assumptions about planning, hierarchy, or rollout are embedded in the current decision framing?',
+            'Who owns each major decision, and who absorbs the downstream consequence if it moves?'
+          ],
+          produces: ['Decision objects', 'Decision owner mappings', 'Trade-off framing', 'Linked downstream impacts', 'Scenario implications', 'Blocked decision markers']
         }
       },
       {
@@ -2808,7 +2934,15 @@ img { max-width: 100%; display: block; }
             ['Orbit \u00D7 Inventory Transition', 'Competing / Needs resolution'],
             ['Hero \u00D7 Omnichannel Execution', 'Blocking / Under investigation'],
             ['Compass \u00D7 Data & Systems Coord.', 'Shared / Low maturity'],
-          ]
+          ],
+          prompts: [
+            'Which initiative is assuming a hierarchy, taxonomy, or system change that another initiative has not yet committed to?',
+            'Where does one initiative rely on system behaviour that is currently owned or altered by another programme?',
+            'Which dependencies are mediated through shared capabilities versus direct system coupling?',
+            'Where do inventory transition, country-of-origin handling, or coexistence logic force alignment across multiple initiatives?',
+            'Which dependencies are known from architecture evidence, and which are still inferred or weakly understood?'
+          ],
+          produces: ['Dependency objects', 'Dependency type classifications', 'Shared domain links', 'Coupling signals', 'Dependency maturity markers', 'Investigation items for unresolved links']
         }
       },
       {
@@ -2828,7 +2962,15 @@ img { max-width: 100%; display: block; }
             ['Omnichannel Execution', 'Stress: Critical / 3 open gaps'],
             ['Assortment & Hierarchy', 'Stress: Medium / 2 initiatives'],
             ['Legacy vs Future-State', 'Stress: High / Under review'],
-          ]
+          ],
+          prompts: [
+            'Which domains are currently being changed by more than one initiative?',
+            'Where are multiple teams competing for the same capability or system change?',
+            'Which shared domains are likely to create coordination overhead or design conflict?',
+            'Where does local optimisation create enterprise-level strain?',
+            'Which domains appear stable, and which feel over-contended today?'
+          ],
+          produces: ['Shared domain hotspot markers', 'Overlap signals', 'Convergence points', 'Coordination risks', 'Capability and system pressure indicators']
         }
       },
       {
@@ -2848,7 +2990,15 @@ img { max-width: 100%; display: block; }
             ['System Preparedness', 'Low / 12 gaps identified'],
             ['Capability Mapping', 'Partial / Legacy unmapped'],
             ['Dependency Maturity', 'Emerging / 40% documented'],
-          ]
+          ],
+          prompts: [
+            'Which system-to-capability mappings are already explicit versus still fragmented across teams?',
+            'Where are architectural decisions being assumed without a clear future-state operating model?',
+            'Which readiness gaps are data-model issues versus integration issues versus process-governance issues?',
+            'Where would a decision today create downstream implementation risk because the enabling architecture is still unclear?',
+            'Which areas are mature enough for commitment, and which require a scoped investigation first?'
+          ],
+          produces: ['Readiness signals', 'Capability-level maturity indicators', 'System clarity markers', 'Risk / gap objects', 'Investigation backlog entries', 'Readiness themes']
         }
       },
       {
@@ -2868,7 +3018,15 @@ img { max-width: 100%; display: block; }
             ['Phase 2: Orbit data layer', 'Blocked / Awaiting decision D-07'],
             ['Phase 3: Hero omnichannel rollout', 'At risk / 2 investigations open'],
             ['Phase 4: Supercharge legacy decom', 'Queued / Depends on Phase 2-3'],
-          ]
+          ],
+          prompts: [
+            'Which initiative or change must happen first to avoid downstream rework?',
+            'Which dependencies are gating the path forward?',
+            'Where would moving too early create unnecessary disruption across other programmes?',
+            'What can happen in parallel, and what truly needs to happen in sequence?',
+            'Which sequencing choices are being driven by architecture constraints versus business urgency?'
+          ],
+          produces: ['Sequence assumptions', 'Blocker visibility', 'Ordering candidates', 'Dependency-critical path notes', 'Stage / phase implications']
         }
       },
       {
@@ -2888,22 +3046,110 @@ img { max-width: 100%; display: block; }
             ['INV-02: Omnichannel data ownership', 'Priority: High / Affects Orbit + Hero'],
             ['INV-03: CoO regulatory mapping', 'Priority: Medium / Compass scope'],
             ['INV-04: Inventory system capacity', 'Priority: High / Cross-initiative'],
-          ]
+          ],
+          prompts: [
+            'What remains too unclear to treat as fact today?',
+            'Which architectural or system questions are blocking major decisions?',
+            'What needs focused follow-up outside the workshop?',
+            'Which unknowns are high-risk enough to track explicitly?',
+            'What should be assigned as an investigation before commitment is made?'
+          ],
+          produces: ['Investigation items', 'Open questions', 'Blocked decisions', 'Follow-up backlog', 'Owner and scope markers']
         }
       }
     ],
 
     objects: [
-      { name: 'Initiative', type: 'Entity', desc: 'A transformation programme' },
-      { name: 'Decision', type: 'Entity', desc: 'A choice that affects the landscape' },
-      { name: 'Capability', type: 'Domain', desc: 'A business or technical capability' },
-      { name: 'System', type: 'Domain', desc: 'A technology system or platform' },
-      { name: 'Dependency', type: 'Relational', desc: 'A link between two objects' },
-      { name: 'Risk / Gap', type: 'Signal', desc: 'An identified risk or capability gap' },
-      { name: 'Readiness Signal', type: 'Signal', desc: 'A preparedness indicator' },
-      { name: 'Investigation Item', type: 'Action', desc: 'An unresolved question to answer' },
-      { name: 'Scenario', type: 'Reasoning', desc: 'An alternative future state to evaluate' },
-      { name: 'Metric / Outcome', type: 'Future', desc: 'A measurable result or KPI' },
+      { name: 'Initiative', type: 'Entity', desc: 'A transformation programme',
+        detail: {
+          what: 'A named transformation programme or project with defined scope, objectives, and interdependencies across the landscape.',
+          why: 'Initiatives are the primary unit of transformation activity. Without structured initiative objects, dependencies remain invisible and sequencing is guesswork.',
+          fields: ['Purpose and scope', 'Status and phase', 'Linked initiatives', 'Impacted domains and capabilities', 'Key decisions attached', 'Readiness posture'],
+          feeds: ['Decision Comparison', 'Dependency Matrix', 'Shared Domain Stress', 'Execution Sequence'],
+          questions: ['What is this initiative trying to change?', 'Which other initiatives does it explicitly depend on?', 'Which shared domains does it touch?', 'What decisions or readiness concerns are already attached to it?']
+        }
+      },
+      { name: 'Decision', type: 'Entity', desc: 'A choice that affects the landscape',
+        detail: {
+          what: 'A strategic or architectural choice that shapes how the transformation proceeds \u2014 from rollout strategy to technology selection.',
+          why: 'Decisions are the moments where the transformation commits direction. Untracked decisions create invisible constraints downstream.',
+          fields: ['Decision statement', 'Owner and stakeholders', 'Options or alternatives', 'Affected capabilities and systems', 'Downstream impact scope', 'Status: open, made, blocked'],
+          feeds: ['Decision Comparison', 'Execution Sequence', 'Investigation Queue'],
+          questions: ['What choice is actually being made here?', 'What assumptions are embedded in this decision?', 'Which systems, capabilities, or initiatives are affected if it changes?', 'Is this decision reversible or locking?']
+        }
+      },
+      { name: 'Capability', type: 'Domain', desc: 'A business or technical capability',
+        detail: {
+          what: 'A business or technical capability that multiple initiatives may share, change, or depend on.',
+          why: 'Capabilities are the shared fabric of the enterprise. When multiple initiatives change the same capability, stress emerges without coordination.',
+          fields: ['Capability name and domain', 'Current-state maturity', 'Initiatives touching it', 'Systems enabling it', 'Target-state clarity', 'Stress indicators'],
+          feeds: ['Dependency Matrix', 'Shared Domain Stress', 'Readiness Signals'],
+          questions: ['Which initiatives are currently changing or relying on this capability?', 'Which systems enable it today?', 'Is the target-state operating model for this capability actually clear?', 'Where is this capability under stress from multiple directions?']
+        }
+      },
+      { name: 'System', type: 'Domain', desc: 'A technology system or platform',
+        detail: {
+          what: 'A technology system, platform, or application that supports one or more capabilities and is implicated in the transformation.',
+          why: 'Systems are where transformation meets implementation. System-level unclarity is the most common source of hidden dependency and blocked readiness.',
+          fields: ['System name and type', 'Capabilities supported', 'Initiatives assuming changes', 'Integration patterns', 'Current vs. target state', 'Coupling and ownership'],
+          feeds: ['Dependency Matrix', 'Shared Domain Stress', 'Readiness Signals', 'Investigation Queue'],
+          questions: ['What capability or capabilities does this system support?', 'Which initiatives are assuming changes in this system?', 'Is the system behaviour or integration pattern clear enough for the transformation?', 'Where do we see direct system coupling versus softer process dependence?']
+        }
+      },
+      { name: 'Dependency', type: 'Relational', desc: 'A link between two objects',
+        detail: {
+          what: 'A structured link between two objects \u2014 typically between initiatives, capabilities, or systems \u2014 that represents a constraint, requirement, or shared concern.',
+          why: 'Dependencies are the connective tissue of transformation complexity. Making them explicit is the single most important step toward sequencing and risk reduction.',
+          fields: ['Source and target objects', 'Dependency type: capability, data, system, process, sequence', 'Strength and hardness', 'Condition or trigger', 'Maturity: confirmed, assumed, under investigation'],
+          feeds: ['Dependency Matrix', 'Shared Domain Stress', 'Execution Sequence'],
+          questions: ['What exactly is the dependency here: capability, data, system, process, or sequence?', 'How hard is this dependency?', 'What condition or event activates it?', 'Is it confirmed, assumed, or under investigation?']
+        }
+      },
+      { name: 'Risk / Gap', type: 'Signal', desc: 'An identified risk or capability gap',
+        detail: {
+          what: 'An identified risk, capability gap, or structural weakness in the transformation landscape that may affect decisions, readiness, or sequencing.',
+          why: 'Risks and gaps that are not explicitly captured become invisible assumptions. Structured risk objects connect directly to decisions and readiness signals.',
+          fields: ['Risk or gap description', 'Severity and likelihood', 'Affected objects', 'Linked decisions', 'Mitigation status', 'Owner'],
+          feeds: ['Readiness Signals', 'Investigation Queue', 'Decision Comparison'],
+          questions: ['What exactly is the risk or gap?', 'Which decisions, capabilities, or initiatives does it affect?', 'Is this a known gap or an emerging concern?', 'What would reduce or eliminate this risk?']
+        }
+      },
+      { name: 'Readiness Signal', type: 'Signal', desc: 'A preparedness indicator',
+        detail: {
+          what: 'A structured indicator of how prepared a capability, system, or domain is for the transformation demands being placed on it.',
+          why: 'Readiness signals turn subjective confidence into structured, trackable indicators. They connect directly to decisions about sequencing and commitment.',
+          fields: ['Readiness theme', 'Confidence level', 'Supporting evidence', 'Gap or concern', 'Linked investigation items', 'Affected decisions'],
+          feeds: ['Readiness Signals', 'Investigation Queue'],
+          questions: ['What exactly is ready or not ready?', 'What evidence supports that status?', 'Which decisions does this readiness signal affect?', 'Does this signal point to a risk, gap, or investigation?']
+        }
+      },
+      { name: 'Investigation Item', type: 'Action', desc: 'An unresolved question to answer',
+        detail: {
+          what: 'An unresolved question, architectural unknown, or capability gap that needs focused follow-up before a decision can be finalised.',
+          why: 'Investigations are the honest admission that not everything is known. Tracking them explicitly prevents decisions being made on incomplete understanding.',
+          fields: ['Question or unknown', 'Owner', 'Blocking decision or dependency', 'Affected objects', 'Status: open, in progress, closed', 'Evidence needed'],
+          feeds: ['Investigation Queue', 'Readiness Signals', 'Decision Comparison'],
+          questions: ['What is the unresolved question?', 'What decision or dependency is blocked because of it?', 'Which systems, capabilities, or initiatives are affected?', 'What evidence is needed to close this investigation?']
+        }
+      },
+      { name: 'Scenario', type: 'Reasoning', desc: 'An alternative future state to evaluate',
+        detail: {
+          what: 'An alternative future state, option, or pathway that is being considered as part of a decision or strategic direction.',
+          why: 'Scenarios make decision alternatives explicit. Without them, transformation choices are debated without structured comparison.',
+          fields: ['Scenario description', 'Linked decision', 'Trade-offs and implications', 'Affected initiatives', 'Feasibility assessment', 'Preferred vs. alternative status'],
+          feeds: ['Decision Comparison', 'Execution Sequence'],
+          questions: ['What are the realistic alternatives being considered?', 'What trade-offs does each scenario create?', 'Which scenario best preserves sequencing flexibility?', 'What would need to be true for this scenario to work?']
+        }
+      },
+      { name: 'Metric / Outcome', type: 'Future', desc: 'A measurable result or KPI',
+        detail: {
+          what: 'A measurable outcome, KPI, or success criterion that defines what good looks like for an initiative, capability, or decision.',
+          why: 'Metrics anchor the transformation to business value. They prevent the intelligence layer from becoming purely structural without connection to outcomes.',
+          fields: ['Metric name', 'Target value or threshold', 'Measurement method', 'Linked initiative or decision', 'Current baseline', 'Tracking frequency'],
+          feeds: ['Decision Comparison', 'Readiness Signals'],
+          questions: ['What outcome does success look like for this initiative?', 'How will we know if a decision produced the intended result?', 'Which metrics are already being tracked, and which are missing?', 'Where do outcome expectations conflict across initiatives?']
+        }
+      },
     ],
 
     engine: [
@@ -3201,44 +3447,113 @@ img { max-width: 100%; display: block; }
       `;
     }
 
+    let promptsHtml = '';
+    if (d.prompts && d.prompts.length > 0) {
+      promptsHtml = `
+        <span class="side-panel__col-label">Illustrative workshop prompts</span>
+        <h4>Example questions we would ask</h4>
+        <ul class="side-panel__prompt-list">
+          ${d.prompts.map(q => `<li>${q}</li>`).join('')}
+        </ul>
+        <div class="side-panel__produces">
+          <h4>What these questions help produce</h4>
+          <ul class="side-panel__produces-list">
+            ${d.produces.map(p => `<li>${p}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+    }
+
     sidePanelContent.innerHTML = `
       <h3>${surface.title}</h3>
       <hr class="accent-divider">
-      <div class="side-panel__section">
-        <h4>What it reveals</h4>
+      <div class="side-panel__columns">
+        <div>
+          <span class="side-panel__col-label">Surface explanation</span>
+          <div class="side-panel__section" style="border-top: none; padding-top: 0;">
+            <h4>What it reveals</h4>
+            <p>${d.what}</p>
+          </div>
+          <div class="side-panel__section">
+            <h4>What the user does next</h4>
+            <p>${d.next}</p>
+          </div>
+          ${sampleHtml}
+          <div class="side-panel__linked">
+            <h4>Depends on these objects</h4>
+            <ul class="side-panel__linked-list">
+              ${d.objects.map(o => `<li>${o}</li>`).join('')}
+            </ul>
+          </div>
+          <div class="side-panel__linked" style="margin-top: var(--space-md);">
+            <h4>Shaped by these drivers</h4>
+            <ul class="side-panel__linked-list">
+              ${d.drivers.map(dr => `<li>${dr}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+        <div>
+          ${promptsHtml}
+        </div>
+      </div>
+    `;
+
+    sidePanel.classList.add('visible', 'side-panel--wide');
+    sidePanel.setAttribute('aria-hidden', 'false');
+    sidePanelOverlay.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+
+    const focusable = sidePanel.querySelectorAll('button, [tabindex]');
+    if (focusable.length) focusable[0].focus();
+  }
+
+  function openObjectPanel(obj) {
+    const d = obj.detail;
+    sidePanelOverline.textContent = `Object \u2014 ${obj.type}`;
+
+    sidePanelContent.innerHTML = `
+      <h3>${obj.name}</h3>
+      <hr class="accent-divider">
+      <div class="side-panel__section" style="border-top: none; padding-top: 0;">
+        <h4>What this object represents</h4>
         <p>${d.what}</p>
       </div>
       <div class="side-panel__section">
-        <h4>What the user does next</h4>
-        <p>${d.next}</p>
+        <h4>Why it matters</h4>
+        <p>${d.why}</p>
       </div>
-      ${sampleHtml}
+      <div class="side-panel__section">
+        <h4>Fields and intelligence this object holds</h4>
+        <div class="side-panel__fields">
+          ${d.fields.map(f => `<div class="side-panel__field-group">${f}</div>`).join('')}
+        </div>
+      </div>
       <div class="side-panel__linked">
-        <h4>Depends on these objects</h4>
+        <h4>Feeds these reasoning surfaces</h4>
         <ul class="side-panel__linked-list">
-          ${d.objects.map(o => `<li>${o}</li>`).join('')}
+          ${d.feeds.map(s => `<li>${s}</li>`).join('')}
         </ul>
       </div>
-      <div class="side-panel__linked" style="margin-top: var(--space-md);">
-        <h4>Shaped by these drivers</h4>
-        <ul class="side-panel__linked-list">
-          ${d.drivers.map(dr => `<li>${dr}</li>`).join('')}
+      <div class="side-panel__section" style="margin-top: var(--space-md);">
+        <h4>Example questions that populate this object</h4>
+        <ul class="side-panel__prompt-list">
+          ${d.questions.map(q => `<li>${q}</li>`).join('')}
         </ul>
       </div>
     `;
 
+    sidePanel.classList.remove('side-panel--wide');
     sidePanel.classList.add('visible');
     sidePanel.setAttribute('aria-hidden', 'false');
     sidePanelOverlay.classList.add('visible');
     document.body.style.overflow = 'hidden';
 
-    // Focus trap
     const focusable = sidePanel.querySelectorAll('button, [tabindex]');
     if (focusable.length) focusable[0].focus();
   }
 
   function closePanel() {
-    sidePanel.classList.remove('visible');
+    sidePanel.classList.remove('visible', 'side-panel--wide');
     sidePanel.setAttribute('aria-hidden', 'true');
     sidePanelOverlay.classList.remove('visible');
     document.body.style.overflow = '';
@@ -3329,6 +3644,16 @@ img { max-width: 100%; display: block; }
       const id = card.dataset.surfaceId;
       const surface = CONTENT.surfaces.find(s => s.id === id);
       if (surface) openPanel(surface);
+    }
+  });
+
+  // Object node clicks
+  document.addEventListener('click', e => {
+    const node = e.target.closest('.object-node');
+    if (node) {
+      const name = node.querySelector('h4').textContent;
+      const obj = CONTENT.objects.find(o => o.name === name);
+      if (obj && obj.detail) openObjectPanel(obj);
     }
   });
 
